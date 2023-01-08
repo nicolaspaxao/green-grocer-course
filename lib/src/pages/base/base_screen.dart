@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quitanda_com_getx/src/config/colors.dart';
-import 'package:quitanda_com_getx/src/home/home_tab.dart';
+import 'package:quitanda_com_getx/src/pages/home/home_tab.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key}) : super(key: key);
