@@ -2,10 +2,25 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 
 import '../config/colors.dart';
+import 'components/category_tile.dart';
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends StatefulWidget {
   const HomeTab({Key? key}) : super(key: key);
 
+  @override
+  State<HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
+  List<String> categorias = [
+    'Frutas',
+    'Grãos',
+    'Verduras',
+    'Temperos',
+    'Cereais'
+  ];
+
+  String selectedCategory = 'Frutas';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +73,7 @@ class HomeTab extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: TextFormField(
               decoration: InputDecoration(
                 fillColor: Colors.white,
@@ -80,7 +95,27 @@ class HomeTab extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 25),
+            height: 40,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (_, index) {
+                return CategoryTile(
+                  isSelected: categorias[index] == selectedCategory,
+                  category: categorias[index],
+                  onPressed: () {
+                    setState(() {
+                      selectedCategory = categorias[index];
+                    });
+                  },
+                );
+              },
+              separatorBuilder: (_, index) => const SizedBox(width: 10),
+              itemCount: categorias.length,
+            ),
+          ),
         ],
       ),
     );
