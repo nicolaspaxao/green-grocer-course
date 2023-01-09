@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quitanda_com_getx/src/models/cart_item_model.dart';
 
 import 'package:quitanda_com_getx/src/models/order_model.dart';
+import 'package:quitanda_com_getx/src/pages/common/payment_dialog.dart';
 import 'package:quitanda_com_getx/src/pages/orders/components/order_status_widget.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
 
@@ -104,7 +105,11 @@ class OrderTile extends StatelessWidget {
                         padding: const EdgeInsets.all(8),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20))),
-                    onPressed: () {},
+                    onPressed: () => showDialog(
+                        context: context,
+                        builder: (_) {
+                          return  PaymentDialog(order: order,);
+                        }),
                     icon: Image.asset('assets/pix.png'),
                     label: const Text('Ver QR Code PIX'),
                   ),

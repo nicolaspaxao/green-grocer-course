@@ -4,6 +4,7 @@ import 'package:quitanda_com_getx/src/models/cart_item_model.dart';
 import 'package:quitanda_com_getx/src/pages/cart/components/cart_title.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
 import '../../config/app_data.dart' as app_data;
+import '../common/payment_dialog.dart';
 
 class CartTab extends StatefulWidget {
   const CartTab({Key? key}) : super(key: key);
@@ -92,6 +93,17 @@ class _CartTabState extends State<CartTab> {
                     ),
                     onPressed: () async {
                       bool? result = await showOrderConfirmation();
+
+                      if (result ?? false) {
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return PaymentDialog(
+                              order: app_data.orders.first,
+                            );
+                          },
+                        );
+                      }
                     },
                     child: const Text(
                       'Concluir pedido',
