@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quitanda_com_getx/src/pages/cart/cart_tab.dart';
 import 'package:quitanda_com_getx/src/pages/home/home_tab.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -9,7 +10,7 @@ class BaseScreen extends StatefulWidget {
 }
 
 class _BaseScreenState extends State<BaseScreen> {
-  int currentIndex = 1;
+  int currentIndex = 0;
   final pageController = PageController();
 
   @override
@@ -20,7 +21,7 @@ class _BaseScreenState extends State<BaseScreen> {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           const HomeTab(),
-          Container(color: Colors.blue),
+          const CartTab(),
           Container(color: Colors.yellow),
           Container(color: Colors.purple),
         ],
