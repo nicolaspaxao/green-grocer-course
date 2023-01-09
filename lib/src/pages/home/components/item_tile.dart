@@ -1,17 +1,21 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:quitanda_com_getx/src/config/colors.dart';
 import 'package:quitanda_com_getx/src/models/item_model.dart';
 import 'package:quitanda_com_getx/src/pages/product/product_screen.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
 
 class ItemTile extends StatelessWidget {
-  const ItemTile({
+  ItemTile({
     Key? key,
     required this.item,
+    required this.cartAnimationMethod,
   }) : super(key: key);
 
   final ItemModel item;
+  final void Function(GlobalKey) cartAnimationMethod;
+  final GlobalKey imageGk = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +25,9 @@ class ItemTile extends StatelessWidget {
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: ((context) {
-                return  ProductScreen(item: item,);
+                return ProductScreen(
+                  item: item,
+                );
               }),
             ),
           ),
@@ -39,8 +45,11 @@ class ItemTile extends StatelessWidget {
                   Expanded(
                     child: Hero(
                       tag: item.imgUrl,
-                      child: Image.asset(
-                        item.imgUrl,
+                      child: Container(
+                        key: imageGk,
+                        child: Image.asset(
+                          item.imgUrl,
+                        ),
                       ),
                     ),
                   ),
@@ -80,7 +89,7 @@ class ItemTile extends StatelessWidget {
           top: 4,
           right: 4,
           child: GestureDetector(
-            onTap: () {},
+            onTap: () => cartAnimationMethod(imageGk),
             child: Container(
               height: 40,
               width: 35,
