@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quitanda_com_getx/src/pages/cart/cart_tab.dart';
 import 'package:quitanda_com_getx/src/pages/home/home_tab.dart';
+import 'package:quitanda_com_getx/src/pages/orders/orders_tab.dart';
+import 'package:quitanda_com_getx/src/pages/profile/profile_tab.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key}) : super(key: key);
@@ -19,11 +21,11 @@ class _BaseScreenState extends State<BaseScreen> {
       body: PageView(
         controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
-        children: [
-          const HomeTab(),
-          const CartTab(),
-          Container(color: Colors.yellow),
-          Container(color: Colors.purple),
+        children: const [
+          HomeTab(),
+          CartTab(),
+          OrderTab(),
+          ProfileTab(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
