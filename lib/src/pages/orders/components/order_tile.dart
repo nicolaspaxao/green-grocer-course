@@ -25,6 +25,8 @@ class OrderTile extends StatelessWidget {
           splashColor: Colors.transparent,
         ),
         child: ExpansionTile(
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
           initiallyExpanded: order.status == 'pending_payment',
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +44,6 @@ class OrderTile extends StatelessWidget {
               ),
             ],
           ),
-          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           children: [
             IntrinsicHeight(
               child: Row(
@@ -69,10 +70,45 @@ class OrderTile extends StatelessWidget {
                     flex: 2,
                     child: OrderStatusWidget(
                       status: order.status!,
-                      isOverdue: order.overdueDateTime!.isBefore(DateTime.now()),
+                      isOverdue:
+                          order.overdueDateTime!.isBefore(DateTime.now()),
                     ),
                   ),
                 ],
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+                children: [
+                  const TextSpan(
+                    text: 'Total: ',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: UtilServices.priceToCurrency(order.total!),
+                  ),
+                ],
+              ),
+            ),
+            Visibility(
+              visible: order.status == 'pending_payment',
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: SizedBox(
+                  height: 40,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(8),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20))),
+                    onPressed: () {},
+                    icon: Image.asset('assets/pix.png'),
+                    label: const Text('Ver QR Code PIX'),
+                  ),
+                ),
               ),
             )
           ],
