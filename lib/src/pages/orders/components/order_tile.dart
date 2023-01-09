@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quitanda_com_getx/src/models/cart_item_model.dart';
 
 import 'package:quitanda_com_getx/src/models/order_model.dart';
+import 'package:quitanda_com_getx/src/pages/orders/components/order_status_widget.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
 
 class OrderTile extends StatelessWidget {
@@ -24,6 +25,7 @@ class OrderTile extends StatelessWidget {
           splashColor: Colors.transparent,
         ),
         child: ExpansionTile(
+          initiallyExpanded: order.status == 'pending_payment',
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -42,26 +44,34 @@ class OrderTile extends StatelessWidget {
           ),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           children: [
-            SizedBox(
-              height: 150,
+            IntrinsicHeight(
               child: Row(
                 children: [
                   Expanded(
                     flex: 3,
-                    child: ListView(
-                      children: order.items!.map((orderItem) {
-                        return _OrderItemWidget(
-                          orderItem: orderItem,
-                        );
-                      }).toList(),
+                    child: SizedBox(
+                      height: 150,
+                      child: ListView(
+                        children: order.items!.map((orderItem) {
+                          return _OrderItemWidget(
+                            orderItem: orderItem,
+                          );
+                        }).toList(),
+                      ),
                     ),
+                  ),
+                  VerticalDivider(
+                    width: 10,
+                    color: Colors.grey.shade300,
+                    thickness: 2,
                   ),
                   Expanded(
                     flex: 2,
-                    child: Container(
-                      color: Colors.blue,
+                    child: OrderStatusWidget(
+                      status: order.status!,
+                      isOverdue: order.overdueDateTime!.isBefore(DateTime.now()),
                     ),
-                  )
+                  ),
                 ],
               ),
             )
