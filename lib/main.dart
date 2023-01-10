@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quitanda_com_getx/src/pages/splash/splash_screen.dart';
+import 'package:get/get.dart';
+import 'package:quitanda_com_getx/app_pages.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,14 +10,15 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
         scaffoldBackgroundColor: Colors.white.withAlpha(190),
       ),
       title: 'Greengrocer',
-      home: const SplashScreen(),
+      getPages: AppPages.pages,
+      initialRoute: PagesRoutes.splashRoute,
     );
   }
 }

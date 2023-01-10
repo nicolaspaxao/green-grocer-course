@@ -1,7 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:quitanda_com_getx/src/pages/auth/sign_up_screen.dart';
-import 'package:quitanda_com_getx/src/pages/base/base_screen.dart';
+import 'package:get/get.dart';
+import 'package:quitanda_com_getx/app_pages.dart';
 import 'package:quitanda_com_getx/src/pages/common/app_name_widget.dart';
 import 'package:quitanda_com_getx/src/pages/common/custom_text_field.dart';
 import 'package:quitanda_com_getx/src/config/colors.dart';
@@ -79,9 +79,7 @@ class SignInScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18))),
-                        onPressed: () => Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                                builder: ((context) => const BaseScreen()))),
+                        onPressed: () => Get.offNamed(PagesRoutes.baseRoute),
                         child: const Text(
                           'Entrar',
                           style: TextStyle(fontSize: 18),
@@ -132,10 +130,7 @@ class SignInScreen extends StatelessWidget {
                                 const BorderSide(width: 2, color: Colors.green),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18))),
-                        onPressed: () => Navigator.of(context)
-                            .push(MaterialPageRoute(builder: ((context) {
-                          return SignUpScreen();
-                        }))),
+                        onPressed: () => Get.toNamed(PagesRoutes.signupRoute),
                         child: const Text(
                           'Criar Conta',
                           style: TextStyle(fontSize: 18),
