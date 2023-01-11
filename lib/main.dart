@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quitanda_com_getx/app_pages.dart';
+import 'package:quitanda_com_getx/dependency_injection.dart';
 
 void main() {
+  DependencyInjection.init();
   runApp(const MyApp());
 }
 
