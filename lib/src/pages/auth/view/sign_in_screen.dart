@@ -7,7 +7,7 @@ import 'package:quitanda_com_getx/src/pages/common/custom_text_field.dart';
 import 'package:quitanda_com_getx/src/config/colors.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
 
-import 'controller/auth_controller.dart';
+import '../controller/auth_controller.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({Key? key}) : super(key: key);
