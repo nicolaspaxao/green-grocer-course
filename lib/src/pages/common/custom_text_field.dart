@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,7 +9,10 @@ class CustomTextField extends StatefulWidget {
   final String? initialValue;
   final bool? isReadOnly;
   final String? Function(String?)? validator;
+  final void Function(String?)? onSaved;
   final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final GlobalKey<FormFieldState>? formFieldKey;
 
   const CustomTextField({
     Key? key,
@@ -21,7 +23,10 @@ class CustomTextField extends StatefulWidget {
     this.initialValue,
     this.isReadOnly = false,
     this.validator,
+    this.onSaved,
     this.controller,
+    this.keyboardType,
+    this.formFieldKey,
   }) : super(key: key);
 
   @override
@@ -42,12 +47,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
+        key: widget.formFieldKey,
         initialValue: widget.initialValue,
         readOnly: widget.isReadOnly!,
         inputFormatters: widget.inputFormatters,
         obscureText: isObscure,
         validator: widget.validator,
         controller: widget.controller,
+        keyboardType: widget.keyboardType,
+        onSaved: widget.onSaved,
         decoration: InputDecoration(
           labelText: widget.label,
           suffixIcon: widget.isSecret

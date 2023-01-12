@@ -8,6 +8,15 @@ import 'package:quitanda_com_getx/src/services/http_manager.dart';
 class AuthRepository {
   final HttpManager _httpManager = HttpManager();
 
+  AuthResult handleUserOrError(Map<dynamic, dynamic> result) {
+    if (result['result'] != null) {
+      final user = UserModel.fromJson(result['result']);
+      return AuthResult.sucess(user);
+    } else {
+      return AuthResult.error(auth_errors.authErrosString(result['error']));
+    }
+  }
+
   Future<AuthResult> validateToken({required String token}) async {
     final result = await _httpManager.restRequest(
       url: Endpoints.validateToken,
@@ -17,12 +26,7 @@ class AuthRepository {
       },
     );
 
-    if (result['result'] != null) {
-      final user = UserModel.fromJson(result['result']);
-      return AuthResult.sucess(user);
-    } else {
-      return AuthResult.error(auth_errors.authErrosString(result['error']));
-    }
+    return handleUserOrError(result);
   }
 
   Future<AuthResult> signIn({
@@ -38,11 +42,16 @@ class AuthRepository {
       },
     );
 
-    if (result['result'] != null) {
-      final user = UserModel.fromJson(result['result']);
-      return AuthResult.sucess(user);
-    } else {
-      return AuthResult.error(auth_errors.authErrosString(result['error']));
-    }
+    return handleUserOrError(result);
+  }
+
+  Future<AuthResult> signUp(UserModel userModel) async {
+    final result = await _httpManager.restRequest(
+      url: Endpoints.signUp,
+      method: HttpMethods.post,
+      body: userModel.toJson(),
+    );
+
+    return handleUserOrError(result);
   }
 }

@@ -49,11 +49,10 @@ class AuthController extends GetxController {
     isLoading.value = true;
     AuthResult result =
         await _authRepository.signIn(email: email, password: password);
-
+    isLoading.value = false;
     result.when(
       sucess: (user) {
         this.user = user;
-
         saveTokenAndProceedToBase();
       },
       error: (message) {
@@ -63,6 +62,23 @@ class AuthController extends GetxController {
         );
       },
     );
+  }
+
+  Future<void> signUp() async {
+    isLoading.value = true;
+    AuthResult result = await _authRepository.signUp(user);
     isLoading.value = false;
+    result.when(
+      sucess: (user) {
+        this.user = user;
+        saveTokenAndProceedToBase();
+      },
+      error: (message) {
+        UtilServices.showToast(
+          title: message,
+          isError: true,
+        );
+      },
+    );
   }
 }

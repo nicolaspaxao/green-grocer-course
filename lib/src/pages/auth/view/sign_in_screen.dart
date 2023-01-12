@@ -2,10 +2,11 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quitanda_com_getx/app_pages.dart';
+import 'package:quitanda_com_getx/src/pages/auth/components/forgot_password_dialog.dart';
 import 'package:quitanda_com_getx/src/pages/common/app_name_widget.dart';
 import 'package:quitanda_com_getx/src/pages/common/custom_text_field.dart';
 import 'package:quitanda_com_getx/src/config/colors.dart';
-import 'package:quitanda_com_getx/src/services/utils_services.dart';
+import 'package:quitanda_com_getx/src/services/validators.dart';
 
 import '../controller/auth_controller.dart';
 
@@ -76,31 +77,16 @@ class SignInScreen extends StatelessWidget {
                       CustomTextField(
                         controller: emailController,
                         label: 'E-mail',
+                        keyboardType: TextInputType.emailAddress,
                         icon: Icons.email,
-                        validator: (email) {
-                          if (email == null || email.isEmpty) {
-                            return 'Digite seu e-mail!';
-                          }
-                          if (!email.isEmail) {
-                            return 'Digite um e-mail válido!';
-                          }
-                          return null;
-                        },
+                        validator: Validators.emailValidator,
                       ),
                       CustomTextField(
                         controller: senhaController,
                         label: 'Senha',
                         icon: Icons.lock,
                         isSecret: true,
-                        validator: (senha) {
-                          if (senha == null || senha.isEmpty) {
-                            return 'Digite sua senha!';
-                          }
-                          if (senha.length < 7) {
-                            return 'Crie uma senha com pelo menos 7 digitos';
-                          }
-                          return null;
-                        },
+                        validator: Validators.passwordValidator,
                       ),
                       SizedBox(
                         height: 50,
@@ -118,12 +104,7 @@ class SignInScreen extends StatelessWidget {
                                         authController.signIn(
                                             email: emailController.text,
                                             password: senhaController.text);
-                                      } else {
-                                        UtilServices.showToast(
-                                            title: 'Campos não válidos',
-                                            isError: true);
                                       }
-                                      //Get.offNamed(PagesRoutes.baseRoute);
                                     },
                               child: authController.isLoading.value
                                   ? const CircularProgressIndicator()
@@ -138,7 +119,14 @@ class SignInScreen extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) {
+                                  return ForgotPasswordDialog(
+                                      email: emailController.text);
+                                });
+                          },
                           child: Text(
                             'Esqueceu a senha?',
                             style: TextStyle(

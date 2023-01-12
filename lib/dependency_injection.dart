@@ -4,6 +4,6 @@ import 'src/pages/auth/controller/auth_controller.dart';
 
 class DependencyInjection {
   static init() {
-    Get.lazyPut<AuthController>(() => AuthController());
+    Get.put<AuthController>(AuthController());
   }
 }
