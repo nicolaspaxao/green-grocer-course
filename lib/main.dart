@@ -4,6 +4,7 @@ import 'package:quitanda_com_getx/app_pages.dart';
 import 'package:quitanda_com_getx/dependency_injection.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   DependencyInjection.init();
   runApp(const MyApp());
 }
