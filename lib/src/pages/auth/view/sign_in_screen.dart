@@ -6,6 +6,7 @@ import 'package:quitanda_com_getx/src/pages/auth/components/forgot_password_dial
 import 'package:quitanda_com_getx/src/pages/common/app_name_widget.dart';
 import 'package:quitanda_com_getx/src/pages/common/custom_text_field.dart';
 import 'package:quitanda_com_getx/src/config/colors.dart';
+import 'package:quitanda_com_getx/src/services/utils_services.dart';
 import 'package:quitanda_com_getx/src/services/validators.dart';
 
 import '../controller/auth_controller.dart';
@@ -119,13 +120,21 @@ class SignInScreen extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (_) {
-                                  return ForgotPasswordDialog(
-                                      email: emailController.text);
-                                });
+                          onPressed: () async {
+                            final bool? result = await showDialog(
+                              context: context,
+                              builder: (_) {
+                                return ForgotPasswordDialog(
+                                  email: emailController.text,
+                                );
+                              },
+                            );
+                            if (result ?? false) {
+                              UtilServices.showToast(
+                                title:
+                                    'Link de recuperação de senha enviado para o seu e-mail!',
+                              );
+                            }
                           },
                           child: Text(
                             'Esqueceu a senha?',

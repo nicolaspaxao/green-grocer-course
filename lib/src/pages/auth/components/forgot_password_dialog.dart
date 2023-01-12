@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:quitanda_com_getx/src/pages/auth/controller/auth_controller.dart';
 import 'package:quitanda_com_getx/src/services/validators.dart';
 
 import '../../common/custom_text_field.dart';
@@ -14,6 +16,7 @@ class ForgotPasswordDialog extends StatelessWidget {
   }
 
   final _formFieldKey = GlobalKey<FormFieldState>();
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +74,10 @@ class ForgotPasswordDialog extends StatelessWidget {
                   ),
                   onPressed: () {
                     FocusScope.of(context).unfocus();
-                    _formFieldKey.currentState!.validate();
+                    if (_formFieldKey.currentState!.validate()) {
+                      authController.resetPassword(emailController.text);
+                      Get.back(result: true);
+                    }
                   },
                   child: const Text(
                     'Recuperar',

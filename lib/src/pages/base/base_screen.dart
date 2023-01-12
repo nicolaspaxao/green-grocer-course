@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quitanda_com_getx/src/pages/cart/cart_tab.dart';
-import 'package:quitanda_com_getx/src/pages/home/home_tab.dart';
+import 'package:quitanda_com_getx/src/pages/home/view/home_tab.dart';
 import 'package:quitanda_com_getx/src/pages/orders/orders_tab.dart';
 import 'package:quitanda_com_getx/src/pages/profile/profile_tab.dart';
 
@@ -38,7 +38,8 @@ class _BaseScreenState extends State<BaseScreen> {
           setState(() {
             currentIndex = index;
             pageController.animateToPage(index,
-                duration:const Duration(milliseconds: 500), curve: Curves.easeInOut);
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut);
           });
         },
         items: const [
