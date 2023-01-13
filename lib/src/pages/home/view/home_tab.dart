@@ -5,7 +5,6 @@ import 'package:quitanda_com_getx/src/pages/common/custom_shimmer.dart';
 import 'package:quitanda_com_getx/src/pages/home/components/item_tile.dart';
 import 'package:quitanda_com_getx/src/pages/home/controller/home_controller.dart';
 
-import '../../../config/app_data.dart' as app_data;
 import '../../../config/colors.dart';
 import '../../common/app_name_widget.dart';
 import '../components/category_tile.dart';
@@ -28,11 +27,9 @@ class _HomeTabState extends State<HomeTab> {
         .runCartAnimation((++_cartQuantityItems).toString());
   }
 
-  @override
-  void initState() {
-    super.initState();
-    Get.find<HomeController>().getAllCategories();
-  }
+  final controller = Get.find<HomeController>();
+
+  final searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -67,36 +64,59 @@ class _HomeTabState extends State<HomeTab> {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  isDense: true,
-                  hintText: 'Pesquise aqui...',
-                  hintStyle: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 14,
+            GetBuilder<HomeController>(
+              builder: (controller) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: TextFormField(
+                    controller: searchController,
+                    onChanged: ((value) {
+                      controller.searchTitle.value = value;
+                    }),
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      isDense: true,
+                      hintText: 'Pesquise aqui...',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 14,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: customConstrastColor,
+                        size: 21,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(60),
+                        borderSide: BorderSide.none,
+                      ),
+                      suffixIcon: controller.searchTitle.value.isNotEmpty
+                          ? IconButton(
+                              onPressed: () {
+                                searchController.clear();
+                                controller.searchTitle.value = '';
+                                FocusScope.of(context).unfocus();
+                              },
+                              icon: Icon(
+                                Icons.close,
+                                color: customConstrastColor,
+                                size: 21,
+                              ),
+                            )
+                          : null,
+                    ),
                   ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: customConstrastColor,
-                    size: 21,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(60),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
+                );
+              },
             ),
             GetBuilder<HomeController>(
               builder: (controller) {
                 return Container(
                   padding: const EdgeInsets.only(left: 25),
                   height: 40,
-                  child: !controller.isLoading.value
+                  child: !controller.isLoadingCategory.value
                       ? ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (_, index) {
@@ -113,8 +133,7 @@ class _HomeTabState extends State<HomeTab> {
                           },
                           separatorBuilder: (_, index) =>
                               const SizedBox(width: 10),
-                          itemCount:
-                              Get.find<HomeController>().categoryList.length,
+                          itemCount: controller.categoryList.length,
                         )
                       : ListView(
                           scrollDirection: Axis.horizontal,
@@ -134,8 +153,10 @@ class _HomeTabState extends State<HomeTab> {
                 );
               },
             ),
-            Obx(() => Expanded(
-                  child: !Get.find<HomeController>().isLoading.value
+            GetBuilder<HomeController>(
+              builder: (controll) {
+                return Expanded(
+                  child: !controll.isLoadingProduct.value
                       ? GridView.builder(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                           physics: const BouncingScrollPhysics(),
@@ -147,12 +168,17 @@ class _HomeTabState extends State<HomeTab> {
                             childAspectRatio: 9 / 11.5,
                           ),
                           itemBuilder: (_, index) {
+                            if ((index + 1 == controll.allProducts.length) &&
+                                !controll.isLastPage) {
+                              controll.loadMoreProducts();
+                            }
+
                             return ItemTile(
-                              item: app_data.items[index],
+                              item: controll.allProducts[index],
                               cartAnimationMethod: itemSelectedCartAnimations,
                             );
                           },
-                          itemCount: app_data.items.length,
+                          itemCount: controll.allProducts.length,
                         )
                       : GridView.count(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -170,7 +196,9 @@ class _HomeTabState extends State<HomeTab> {
                             ),
                           ),
                         ),
-                )),
+                );
+              },
+            ),
           ],
         ),
       ),

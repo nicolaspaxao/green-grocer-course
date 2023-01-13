@@ -64,7 +64,7 @@ class _ItemTileState extends State<ItemTile> {
                       tag: widget.item.imgUrl,
                       child: Container(
                         key: imageGk,
-                        child: Image.asset(
+                        child: Image.network(
                           widget.item.imgUrl,
                         ),
                       ),
