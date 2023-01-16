@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:quitanda_com_getx/src/config/colors.dart';
 
 import 'package:quitanda_com_getx/src/models/item_model.dart';
 import 'package:quitanda_com_getx/src/pages/common/quantity_widget.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
+
+import '../base/controller/navigation_controller.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({
@@ -19,6 +22,7 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   int cartItemQuantity = 1;
+  final navigationController = Get.find<NavigationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +109,11 @@ class _ProductScreenState extends State<ProductScreen> {
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15))),
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.back();
+                            navigationController
+                                .navigatePageView(NavigationTabs.cart);
+                          },
                           label: const Text(
                             'Adicionar ao carrinho',
                             style: TextStyle(

@@ -33,9 +33,7 @@ class HomeController extends GetxController {
     );
     debounce(
       searchTitle,
-      (_) {
-        update();
-      },
+      (_) => filterByTitle(),
       time: const Duration(milliseconds: 600),
     );
   }
@@ -69,6 +67,37 @@ class HomeController extends GetxController {
     );
   }
 
+  void filterByTitle() {
+    for (var category in categoryList) {
+      category.items.clear();
+      category.pagination = 0;
+    }
+    if (searchTitle.value.isEmpty) {
+      categoryList.removeAt(0);
+    } else {
+      CategoryModel? c = categoryList.firstWhereOrNull((cat) => cat.id == '');
+
+      if (c == null) {
+        final allProductsCategories = CategoryModel(
+          title: 'Todos',
+          id: '',
+          items: [],
+          pagination: 0,
+        );
+
+        categoryList.insert(0, allProductsCategories);
+      } else {
+        c.items.clear();
+        c.pagination = 0;
+      }
+    }
+
+    currentCategory = categoryList.first;
+    update();
+
+    getAllProducts();
+  }
+
   void loadMoreProducts() {
     currentCategory!.pagination++;
     getAllProducts(canLoad: false);
@@ -79,18 +108,37 @@ class HomeController extends GetxController {
       isLoadingProduct.value = true;
     }
 
-    HomeResult<ItemModel> result = await homeRepository.getAllProducts(
-      {
-        'page': currentCategory!.pagination,
-        'categoryId': currentCategory!.id,
-        'itemsPerPage': itemsPerPage,
-      },
-    );
+    Map<String, dynamic> body = {
+      'page': currentCategory!.pagination,
+      'categoryId': currentCategory!.id,
+      'itemsPerPage': itemsPerPage,
+    };
+
+    if (searchTitle.value.isNotEmpty) {
+      body['title'] = searchTitle.value;
+      if (currentCategory!.id == '') {
+        body.remove('categoryId');
+      }
+    }
+
+    HomeResult<ItemModel> result = await homeRepository.getAllProducts(body);
+
     isLoadingProduct.value = false;
 
     result.when(
       sucess: (data) {
-        currentCategory!.items.addAll(data);
+        if (currentCategory!.items.isNotEmpty) {
+          for (var item in data) {
+            currentCategory!.items.addIf(
+              (ItemModel value) {
+                data.firstWhere((e) => e.id != value.id);
+              },
+              item,
+            );
+          }
+        } else {
+          currentCategory!.items.addAll(data);
+        }
         debugPrint(data.toString());
       },
       error: (error) {

@@ -157,28 +157,43 @@ class _HomeTabState extends State<HomeTab> {
               builder: (controll) {
                 return Expanded(
                   child: !controll.isLoadingProduct.value
-                      ? GridView.builder(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                          physics: const BouncingScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 9 / 11.5,
+                      ? Visibility(
+                          visible: (controller.currentCategory?.items ?? [])
+                              .isNotEmpty,
+                          replacement: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.search_off,
+                                size: 40,
+                                color: customSwatchColor,
+                              ),
+                              const Text('Não há itens para apresentar'),
+                            ],
                           ),
-                          itemBuilder: (_, index) {
-                            if ((index + 1 == controll.allProducts.length) &&
-                                !controll.isLastPage) {
-                              controll.loadMoreProducts();
-                            }
+                          child: GridView.builder(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                            physics: const BouncingScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 9 / 11.5,
+                            ),
+                            itemBuilder: (_, index) {
+                              if ((index + 1 == controll.allProducts.length) &&
+                                  !controll.isLastPage) {
+                                controll.loadMoreProducts();
+                              }
 
-                            return ItemTile(
-                              item: controll.allProducts[index],
-                              cartAnimationMethod: itemSelectedCartAnimations,
-                            );
-                          },
-                          itemCount: controll.allProducts.length,
+                              return ItemTile(
+                                item: controll.allProducts[index],
+                                cartAnimationMethod: itemSelectedCartAnimations,
+                              );
+                            },
+                            itemCount: controll.allProducts.length,
+                          ),
                         )
                       : GridView.count(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
