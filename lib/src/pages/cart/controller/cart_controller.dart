@@ -1,16 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quitanda_com_getx/src/models/cart_item_model.dart';
 import 'package:quitanda_com_getx/src/models/item_model.dart';
+import 'package:quitanda_com_getx/src/models/order_model.dart';
 import 'package:quitanda_com_getx/src/pages/auth/controller/auth_controller.dart';
 import 'package:quitanda_com_getx/src/pages/cart/repositories/cart_repository.dart';
 import 'package:quitanda_com_getx/src/pages/cart/result/cart_result.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
+
+import '../../common/payment_dialog.dart';
 
 class CartController extends GetxController {
   final _cartRepository = CartRepository();
   final _authController = Get.find<AuthController>();
 
   List<CartItemModel> cartItems = [];
+
+  RxBool isCheckoutLoading = false.obs;
 
   @override
   void onInit() {
@@ -35,6 +41,21 @@ class CartController extends GetxController {
       cartItemId: item.id,
       quantity: quantity,
     );
+
+    if (result) {
+      if (quantity == 0) {
+        cartItems.removeWhere((cartItem) => cartItem.id == item.id);
+      } else {
+        cartItems.firstWhere((cartItem) => cartItem.id == item.id).quantity =
+            quantity;
+      }
+      update();
+    } else {
+      UtilServices.showToast(
+        title: 'Ocorreu um erro ao alterar a quantidade do produto',
+        isError: true,
+      );
+    }
 
     return result;
   }
@@ -66,6 +87,12 @@ class CartController extends GetxController {
     );
   }
 
+  int getCartTotalItems() {
+    return cartItems.isEmpty
+        ? 0
+        : cartItems.map((e) => e.quantity).reduce((a, b) => a + b);
+  }
+
   Future<void> addItemToCart({
     required ItemModel item,
     int quantity = 1,
@@ -73,19 +100,10 @@ class CartController extends GetxController {
     int itemIndex = getItemIndex(item);
     if (itemIndex >= 0) {
       final product = cartItems[itemIndex];
-      final result = await changeItemQuantity(
+      await changeItemQuantity(
         item: product,
         quantity: (product.quantity + quantity),
       );
-
-      if (result) {
-        cartItems[itemIndex].quantity += quantity;
-      } else {
-        UtilServices.showToast(
-          title: 'Ocorreu um erro ao alterar a quantidade do produto',
-          isError: true,
-        );
-      }
     } else {
       final CartResult<String> result = await _cartRepository.addItemToCart(
         productId: item.id,
@@ -109,5 +127,32 @@ class CartController extends GetxController {
       );
     }
     update();
+  }
+
+  Future checkoutCart() async {
+    isCheckoutLoading.value = true;
+    CartResult<OrderModel> result = await _cartRepository.checkoutCart(
+      token: _authController.user.token!,
+      total: cartTotalPrice(),
+    );
+    isCheckoutLoading.value = false;
+
+    result.when(
+      sucess: (order) {
+        cartItems.clear();
+        update();
+        showDialog(
+          context: Get.context!,
+          builder: (_) {
+            return PaymentDialog(
+              order: order,
+            );
+          },
+        );
+      },
+      error: (message) {
+        UtilServices.showToast(title: message);
+      },
+    );
   }
 }

@@ -1,5 +1,3 @@
-import 'package:quitanda_com_getx/src/models/user_model.dart';
-
 import '../models/cart_item_model.dart';
 import '../models/item_model.dart';
 import '../models/order_model.dart';
@@ -91,13 +89,13 @@ List<String> categorias = [
 //   )
 // ];
 
-UserModel user = UserModel(
-  phone: '99 9 9999-9999',
-  cpf: '999.999.999-99',
-  email: 'nicolas@gmail.com',
-  name: 'Nicolas Paxão',
-  password: '',
-);
+// UserModel user = UserModel(
+//   phone: '99 9 9999-9999',
+//   cpf: '999.999.999-99',
+//   email: 'nicolas@gmail.com',
+//   name: 'Nicolas Paxão',
+//   password: '',
+// );
 
 List<OrderModel> orders = [
   OrderModel(

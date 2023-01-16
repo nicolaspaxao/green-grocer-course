@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:quitanda_com_getx/src/config/colors.dart';
 import 'package:quitanda_com_getx/src/models/cart_item_model.dart';
 import 'package:quitanda_com_getx/src/pages/common/quantity_widget.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
+
+import '../controller/cart_controller.dart';
 
 class CartTile extends StatefulWidget {
   const CartTile({
@@ -43,11 +46,20 @@ class _CartTileState extends State<CartTile> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        trailing: QuantityWidget(
-          value: widget.cartItem.quantity,
-          suffixText: widget.cartItem.item.unit,
-          isRemovable: true,
-          result: ((quantity) {}),
+        trailing: GetBuilder<CartController>(
+          builder: (controller) {
+            return QuantityWidget(
+              value: widget.cartItem.quantity,
+              suffixText: widget.cartItem.item.unit,
+              isRemovable: true,
+              result: ((quantity) {
+                controller.changeItemQuantity(
+                  item: widget.cartItem,
+                  quantity: quantity,
+                );
+              }),
+            );
+          },
         ),
       ),
     );

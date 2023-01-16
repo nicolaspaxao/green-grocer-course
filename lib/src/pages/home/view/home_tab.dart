@@ -1,4 +1,5 @@
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quitanda_com_getx/src/pages/common/custom_shimmer.dart';
@@ -6,6 +7,8 @@ import 'package:quitanda_com_getx/src/pages/home/components/item_tile.dart';
 import 'package:quitanda_com_getx/src/pages/home/controller/home_controller.dart';
 
 import '../../../config/colors.dart';
+import '../../base/controller/navigation_controller.dart';
+import '../../cart/controller/cart_controller.dart';
 import '../../common/app_name_widget.dart';
 import '../components/category_tile.dart';
 
@@ -47,17 +50,38 @@ class _HomeTabState extends State<HomeTab> {
           actions: [
             Padding(
               padding: const EdgeInsets.only(top: 10, right: 10),
-              child: GestureDetector(
-                onTap: () {},
-                child: AddToCartIcon(
-                  badgeOptions: BadgeOptions(
-                      active: true, backgroundColor: customConstrastColor),
-                  key: cartKey,
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: customSwatchColor,
-                  ),
-                ),
+              child: GetBuilder<NavigationController>(
+                builder: (controller) {
+                  return GestureDetector(
+                    onTap: () =>
+                        controller.navigatePageView(NavigationTabs.cart),
+                    child: AddToCartIcon(
+                      badgeOptions: BadgeOptions(
+                        active: false,
+                        backgroundColor: customConstrastColor,
+                      ),
+                      key: cartKey,
+                      icon: GetBuilder<CartController>(
+                        builder: (controller) {
+                          return Badge(
+                            badgeColor: customConstrastColor,
+                            badgeContent: Text(
+                              controller.getCartTotalItems().toString(),
+                              style: const TextStyle(
+                                fontSize: 9,
+                                color: Colors.white,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.shopping_cart,
+                              color: customSwatchColor,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -186,7 +210,6 @@ class _HomeTabState extends State<HomeTab> {
                                   !controll.isLastPage) {
                                 controll.loadMoreProducts();
                               }
-
                               return ItemTile(
                                 item: controll.allProducts[index],
                                 cartAnimationMethod: itemSelectedCartAnimations,

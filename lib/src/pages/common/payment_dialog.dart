@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:quitanda_com_getx/src/models/order_model.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
@@ -26,8 +26,8 @@ class PaymentDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Padding(
-                  padding:  EdgeInsets.symmetric(vertical: 10),
-                  child:  Text(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
                     'Pagamento com Pix',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -35,10 +35,10 @@ class PaymentDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-                QrImage(
-                  data: "1234567890",
-                  version: QrVersions.auto,
-                  size: 200.0,
+                Image.memory(
+                  UtilServices.decodeQrCodeImage(order.qrCodeImage!),
+                  height: 200,
+                  width: 200,
                 ),
                 Text(
                   'Vencimento: ${UtilServices.dateTimeFormatter(order.overdueDateTime!)}',
@@ -64,7 +64,10 @@ class PaymentDialog extends StatelessWidget {
                           borderRadius: BorderRadius.circular(18),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        FlutterClipboard.copy(order.copyAndPaste!);
+                        UtilServices.showToast(title: 'Qr Code copiado!');
+                      },
                       icon: const Icon(
                         Icons.copy,
                         size: 15,

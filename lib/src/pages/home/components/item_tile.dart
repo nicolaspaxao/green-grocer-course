@@ -7,6 +7,7 @@ import 'package:quitanda_com_getx/src/models/item_model.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
 
 import '../../../../app_pages.dart';
+import '../../cart/controller/cart_controller.dart';
 
 class ItemTile extends StatefulWidget {
   const ItemTile({
@@ -107,23 +108,28 @@ class _ItemTileState extends State<ItemTile> {
               bottomLeft: Radius.circular(15),
             ),
             child: Material(
-              child: InkWell(
-                onTap: () {
-                  switchIcon();
-                  widget.cartAnimationMethod(imageGk);
+              child: GetBuilder<CartController>(
+                builder: (controller) {
+                  return InkWell(
+                    onTap: () {
+                      switchIcon();
+                      controller.addItemToCart(item: widget.item);
+                      widget.cartAnimationMethod(imageGk);
+                    },
+                    child: Ink(
+                      height: 40,
+                      width: 35,
+                      decoration: BoxDecoration(
+                        color: tileColor,
+                      ),
+                      child: Icon(
+                        tileIcon,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  );
                 },
-                child: Ink(
-                  height: 40,
-                  width: 35,
-                  decoration: BoxDecoration(
-                    color: tileColor,
-                  ),
-                  child: Icon(
-                    tileIcon,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
               ),
             ),
           ),
