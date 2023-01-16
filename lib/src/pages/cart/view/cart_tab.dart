@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:quitanda_com_getx/src/config/colors.dart';
-import 'package:quitanda_com_getx/src/models/cart_item_model.dart';
 import 'package:quitanda_com_getx/src/pages/cart/components/cart_title.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
-import '../../config/app_data.dart' as app_data;
-import '../common/payment_dialog.dart';
+import '../../../config/app_data.dart' as app_data;
+import '../../common/payment_dialog.dart';
+import '../controller/cart_controller.dart';
 
 class CartTab extends StatefulWidget {
   const CartTab({Key? key}) : super(key: key);
@@ -14,24 +15,6 @@ class CartTab extends StatefulWidget {
 }
 
 class _CartTabState extends State<CartTab> {
-  void removeItemFromCart(CartItemModel cartItem) {
-    setState(() {
-      app_data.cartItems.remove(cartItem);
-      UtilServices.showToast(
-          title: '${cartItem.item!.itemName} removido(a) do carrinho');
-    });
-  }
-
-  double cartTotalPrice() {
-    double total = 0;
-    for (var item in app_data.cartItems) {
-      setState(() {
-        total += item.totalPrice();
-      });
-    }
-    return total;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,13 +28,16 @@ class _CartTabState extends State<CartTab> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: app_data.cartItems.length,
-              itemBuilder: (_, index) {
-                return CartTile(
-                  cartItem: app_data.cartItems[index],
-                  remove: removeItemFromCart,
+            child: GetBuilder<CartController>(
+              builder: (controller) {
+                return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: controller.cartItems.length,
+                  itemBuilder: (_, index) {
+                    return CartTile(
+                      cartItem: controller.cartItems[index],
+                    );
+                  },
                 );
               },
             ),
@@ -77,12 +63,18 @@ class _CartTabState extends State<CartTab> {
                     fontSize: 12,
                   ),
                 ),
-                Text(
-                  UtilServices.priceToCurrency(cartTotalPrice()),
-                  style: TextStyle(
-                      fontSize: 23,
-                      color: customSwatchColor,
-                      fontWeight: FontWeight.bold),
+                GetBuilder<CartController>(
+                  builder: (controller) {
+                    return Text(
+                      UtilServices.priceToCurrency(
+                        controller.cartTotalPrice(),
+                      ),
+                      style: TextStyle(
+                          fontSize: 23,
+                          color: customSwatchColor,
+                          fontWeight: FontWeight.bold),
+                    );
+                  },
                 ),
                 SizedBox(
                   height: 50,
@@ -106,7 +98,8 @@ class _CartTabState extends State<CartTab> {
                           },
                         );
                       } else {
-                        UtilServices.showToast(title: 'Pedido não confirmado', isError: true);
+                        UtilServices.showToast(
+                            title: 'Pedido não confirmado', isError: true);
                       }
                     },
                     child: const Text(

@@ -76,20 +76,20 @@ List<String> categorias = [
   'Cereais'
 ];
 
-List<CartItemModel> cartItems = [
-  CartItemModel(
-    item: apple,
-    quantity: 2,
-  ),
-  CartItemModel(
-    item: mango,
-    quantity: 1,
-  ),
-  CartItemModel(
-    item: guava,
-    quantity: 3,
-  )
-];
+// List<CartItemModel> cartItems = [
+//   CartItemModel(
+//     item: apple,
+//     quantity: 2,
+//   ),
+//   CartItemModel(
+//     item: mango,
+//     quantity: 1,
+//   ),
+//   CartItemModel(
+//     item: guava,
+//     quantity: 3,
+//   )
+// ];
 
 UserModel user = UserModel(
   phone: '99 9 9999-9999',
@@ -115,14 +115,15 @@ List<OrderModel> orders = [
       CartItemModel(
         item: apple,
         quantity: 2,
+        id: '',
       ),
       CartItemModel(
         item: mango,
         quantity: 2,
+        id: '',
       ),
     ],
   ),
-  
   OrderModel(
     copyAndPaste: 'q1w2e3r4t5y6',
     createdDateTime: DateTime.parse(
@@ -138,6 +139,7 @@ List<OrderModel> orders = [
       CartItemModel(
         item: guava,
         quantity: 1,
+        id: '',
       ),
     ],
   ),

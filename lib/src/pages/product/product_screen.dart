@@ -1,20 +1,20 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quitanda_com_getx/src/config/colors.dart';
 
-import 'package:quitanda_com_getx/src/models/item_model.dart';
 import 'package:quitanda_com_getx/src/pages/common/quantity_widget.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
 
+import '../../models/item_model.dart';
 import '../base/controller/navigation_controller.dart';
+import '../cart/controller/cart_controller.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({
+  ProductScreen({
     Key? key,
-    required this.item,
   }) : super(key: key);
-  final ItemModel item;
+
+  final ItemModel item = Get.arguments;
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
@@ -103,26 +103,34 @@ class _ProductScreenState extends State<ProductScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 55,
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15))),
-                          onPressed: () {
-                            Get.back();
-                            navigationController
-                                .navigatePageView(NavigationTabs.cart);
-                          },
-                          label: const Text(
-                            'Adicionar ao carrinho',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                      GetBuilder<CartController>(
+                        builder: (controller) {
+                          return SizedBox(
+                            height: 55,
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15))),
+                              onPressed: () {
+                                Get.back();
+                                controller.addItemToCart(
+                                  item: widget.item,
+                                  quantity: cartItemQuantity,
+                                );
+                                navigationController
+                                    .navigatePageView(NavigationTabs.cart);
+                              },
+                              label: const Text(
+                                'Adicionar ao carrinho',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              icon: const Icon(Icons.shopping_cart_outlined),
                             ),
-                          ),
-                          icon: const Icon(Icons.shopping_cart_outlined),
-                        ),
+                          );
+                        },
                       )
                     ],
                   ),

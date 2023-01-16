@@ -108,7 +108,9 @@ class OrderTile extends StatelessWidget {
                     onPressed: () => showDialog(
                         context: context,
                         builder: (_) {
-                          return  PaymentDialog(order: order,);
+                          return PaymentDialog(
+                            order: order,
+                          );
                         }),
                     icon: Image.asset('assets/pix.png'),
                     label: const Text('Ver QR Code PIX'),
@@ -138,10 +140,10 @@ class _OrderItemWidget extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            '${orderItem.quantity} ${orderItem.item!.unit} ',
+            '${orderItem.quantity} ${orderItem.item.unit} ',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          Expanded(child: Text(orderItem.item!.itemName)),
+          Expanded(child: Text(orderItem.item.itemName)),
           Text(
             UtilServices.priceToCurrency(orderItem.totalPrice()),
           ),

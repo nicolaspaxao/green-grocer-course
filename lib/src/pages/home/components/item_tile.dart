@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:quitanda_com_getx/src/config/colors.dart';
 import 'package:quitanda_com_getx/src/models/item_model.dart';
-import 'package:quitanda_com_getx/src/pages/product/product_screen.dart';
 import 'package:quitanda_com_getx/src/services/utils_services.dart';
+
+import '../../../../app_pages.dart';
 
 class ItemTile extends StatefulWidget {
   const ItemTile({
@@ -39,15 +41,9 @@ class _ItemTileState extends State<ItemTile> {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: ((context) {
-                return ProductScreen(
-                  item: widget.item,
-                );
-              }),
-            ),
-          ),
+          onTap: () {
+            Get.toNamed(PagesRoutes.productRoute, arguments: widget.item);
+          },
           child: Card(
             elevation: 3,
             shadowColor: Colors.grey.shade300,
