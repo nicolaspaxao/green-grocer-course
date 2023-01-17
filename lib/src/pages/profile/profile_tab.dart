@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quitanda_com_getx/src/pages/auth/controller/auth_controller.dart';
 import 'package:quitanda_com_getx/src/pages/common/custom_text_field.dart';
+import 'package:quitanda_com_getx/src/services/validators.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({Key? key}) : super(key: key);
@@ -90,6 +91,9 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 
   Future<bool?> updatePassword() {
+    final newPasswordController = TextEditingController();
+    final currentPasswordController = TextEditingController();
+    final keyForm = GlobalKey<FormState>();
     return showDialog(
       context: context,
       builder: (_) {
@@ -100,48 +104,83 @@ class _ProfileTabState extends State<ProfileTab> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
-                        'Atualização de senha',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const CustomTextField(
-                      label: 'Senha atual',
-                      icon: Icons.lock,
-                      isSecret: true,
-                    ),
-                    const CustomTextField(
-                      label: 'Nova senha',
-                      icon: Icons.lock_outline,
-                      isSecret: true,
-                    ),
-                    const CustomTextField(
-                      label: 'Confirmar nova senha',
-                      icon: Icons.lock_outline,
-                      isSecret: true,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18))),
-                        onPressed: () {},
-                        child: const Text(
-                          'Atualizar',
-                          style: TextStyle(fontSize: 18),
+                child: Form(
+                  key: keyForm,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Text(
+                          'Atualização de senha',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
-                  ],
+                      CustomTextField(
+                        controller: currentPasswordController,
+                        label: 'Senha atual',
+                        icon: Icons.lock,
+                        isSecret: true,
+                        validator: Validators.passwordValidator,
+                      ),
+                      CustomTextField(
+                        controller: newPasswordController,
+                        label: 'Nova senha',
+                        icon: Icons.lock_outline,
+                        isSecret: true,
+                        validator: Validators.passwordValidator,
+                      ),
+                      CustomTextField(
+                        label: 'Confirmar nova senha',
+                        icon: Icons.lock_outline,
+                        isSecret: true,
+                        validator: (password) {
+                          final result = Validators.passwordValidator(password);
+                          if (result != null) {
+                            return result;
+                          }
+                          if (password != newPasswordController.text) {
+                            return 'As senhão não são equivalentes';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        height: 50,
+                        child: GetBuilder<AuthController>(
+                          builder: (controller) {
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18))),
+                              onPressed: controller.isLoading.value
+                                  ? null
+                                  : () {
+                                      if (keyForm.currentState!.validate()) {
+                                        controller.changePassword(
+                                          currentPassword:
+                                              currentPasswordController.text,
+                                          newPassword:
+                                              newPasswordController.text,
+                                        );
+                                      }
+                                    },
+                              child: controller.isLoading.value
+                                  ? const CircularProgressIndicator()
+                                  : const Text(
+                                      'Atualizar',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Positioned(

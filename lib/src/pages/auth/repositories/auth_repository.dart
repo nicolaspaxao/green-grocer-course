@@ -64,4 +64,26 @@ class AuthRepository {
       },
     );
   }
+
+  Future<bool> changePassword({
+    required String email,
+    required String token,
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final result = await _httpManager.restRequest(
+      url: Endpoints.changePassword,
+      method: HttpMethods.post,
+      headers: {
+        'X-Parse-Session-Token': token,
+      },
+      body: {
+        'email': email,
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      },
+    );
+
+    return result['result'] == null;
+  }
 }
