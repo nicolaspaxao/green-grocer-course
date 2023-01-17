@@ -41,7 +41,7 @@ class UtilServices {
   static String dateTimeFormatter(DateTime date) {
     initializeDateFormatting();
     DateFormat dateFormat = DateFormat.yMd('pt_BR').add_Hm();
-    return dateFormat.format(date);
+    return dateFormat.format(date.toLocal());
   }
 
   static void showToast({required String title, bool isError = false}) {

@@ -10,9 +10,9 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
       copyAndPaste: json['copiaecola'] as String?,
       overdueDateTime:
           json['due'] == null ? null : DateTime.parse(json['due'] as String),
-      createdDateTime: json['createdDateTime'] == null
+      createdDateTime: json['createdAt'] == null
           ? null
-          : DateTime.parse(json['createdDateTime'] as String),
+          : DateTime.parse(json['createdAt'] as String),
       qrCodeImage: json['qrCodeImage'] as String?,
       id: json['id'] as String?,
       status: json['status'] as String?,
@@ -27,7 +27,7 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
     <String, dynamic>{
       'copiaecola': instance.copyAndPaste,
       'due': instance.overdueDateTime?.toIso8601String(),
-      'createdDateTime': instance.createdDateTime?.toIso8601String(),
+      'createdAt': instance.createdDateTime?.toIso8601String(),
       'qrCodeImage': instance.qrCodeImage,
       'id': instance.id,
       'status': instance.status,
