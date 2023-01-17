@@ -72,7 +72,8 @@ class OrderTile extends StatelessWidget {
                                 child: SizedBox(
                                   height: 150,
                                   child: ListView(
-                                    children: order.items!.map((orderItem) {
+                                    children: controller.order.items!
+                                        .map((orderItem) {
                                       return _OrderItemWidget(
                                         orderItem: orderItem,
                                       );
